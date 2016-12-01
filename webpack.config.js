@@ -4,6 +4,8 @@ var webpack = require('webpack');
 var config = {
   devtool: 'cheap-module-eval-source-map',
   entry: [
+    // 'webpack-dev-server/client?http://0.0.0.0:3000', // WebpackDevServer host and port
+    // 'webpack/hot/only-dev-server', // "only" prevents reload on syntax errors
     'webpack-hot-middleware/client',
     './app/main'
   ],
@@ -22,6 +24,11 @@ var config = {
   ],
   module: {
     loaders: [
+      {
+        test: /\.jsx%/,
+        loaders: ['react-hot'],
+        include: path.join(__dirname, 'app')
+      },
       {
         test: /\.js$/,
         exclude: /node_modules/,
