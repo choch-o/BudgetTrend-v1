@@ -11,8 +11,8 @@ import dataService from './services/data-service';
 import budgetApp from './reducers';
 
 injectTapEventPlugin();
-//const store = configureStore(window.INITIAL_STATE);
-let store = createStore(budgetApp, {}, applyMiddleware(dataService));
+const store = configureStore(window.INITIAL_STATE);
+//let store = createStore(budgetApp, {}, applyMiddleware(dataService));
 
 ReactDOM.render(
   <Provider store={store}>
@@ -21,4 +21,4 @@ ReactDOM.render(
   document.getElementById('app')
 );
 
-store.dispatch({type: 'GET_BUDGET_DATA'})
+//store.dispatch({type: 'GET_BUDGET_DATA'})
