@@ -1,8 +1,9 @@
+/*
 import { applyMiddleware, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 import promise from 'redux-promise';
 import createLogger from 'redux-logger';
-import rootReducer from '../reducers'
+import rootReducer from '../reducers/'
 
 export default function configureStore(initialState) {
   const logger = createLogger();
@@ -11,7 +12,7 @@ export default function configureStore(initialState) {
     initialState,
     applyMiddleware(thunk, promise, logger)
   );
-   
+
   if (module.hot) {
     // Enable hot module replacement for reducers
     module.hot.accept('../reducers', () => {
@@ -21,4 +22,22 @@ export default function configureStore(initialState) {
   }
 
   return store;
+}
+*/
+import { createStore, applyMiddleware } from 'redux'
+import thunkMiddleware from 'redux-thunk'
+import createLogger from 'redux-logger'
+import rootReducer from '../reducers/index'
+
+const loggerMiddleware = createLogger()
+
+export default function configureStore(preloadedState) {
+  return createStore(
+    rootReducer,
+    preloadedState,
+    applyMiddleware(
+      thunkMiddleware,
+      loggerMiddleware
+    )
+  )
 }
