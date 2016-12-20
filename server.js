@@ -121,6 +121,13 @@ app.use(function(req, res) {
   });
 });
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+
 // Production error handler
 if (app.get('env') === 'production') {
   app.use(function(err, req, res, next) {

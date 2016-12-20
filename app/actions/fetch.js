@@ -1,5 +1,5 @@
-import fetch from 'isomorphic-fetch'
-
+// import fetch from 'isomorphic-fetch'
+import request from 'superagent';
 export const REQUEST_PROGRAMS = 'REQUEST_PROGRAMS'
 export const RECEIVE_PROGRAMS = 'RECEIVE_PROGRAMS'
 export const SELECT_YEAR = 'SELECT_YEAR'
@@ -34,16 +34,25 @@ function receivePrograms(year, json) {
 }
 
 function fetchPrograms(year) {
+  request.get('http://openapi.openfiscaldata.go.kr/ExpenditureBudgetAdd?key=CNGZY1000038620161201092911MGTCR&FSCL_YY=2015&type=json')
+      .set('Accept', '*/*')
+      .end(function(err, response) {
+        if (err) return console.error(err);
+        console.log("GET SUCCESS");
+      });
+  return year;
+  /*
   return dispatch => {
     dispatch(requestPrograms(year))
     console.log(year)
-    return fetch(`http://openapi.openfiscaldata.go.kr/ExpenditureBudgetInit?FSCL_YY=${year}`, {
+    return fetch(`http://openapi.openfiscaldata.go.kr/ExpenditureBudgetAdd?key=CNGZY1000038620161201092911MGTCR&type=json&pIndex=1&pSize=100&FSCL_YY=${year}`, {
           mode: 'cors'
         }
       )
       .then(response => response.json())
       .then(json => dispatch(receivePrograms(year, json)))
   }
+  */
 }
 
 function shouldFetchPrograms(state, year) {
@@ -60,7 +69,10 @@ function shouldFetchPrograms(state, year) {
 export function fetchProgramsIfNeeded(year) {
   return (dispatch, getState) => {
     if (shouldFetchPrograms(getState(), year)) {
-      return dispatch(fetchPrograms(year))
+      console.log("TEST");
+      console.log(fetchPrograms(year));
+      return 0;
+      // return dispatch(fetchPrograms(year))
     }
   }
 }
