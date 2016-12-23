@@ -42,20 +42,6 @@ class AsyncApp extends Component {
         <Picker value={selectedYear}
                 onChange={this.handleChange}
                 options={[ 2015, 2016 ]} />
-        <p>
-          {lastUpdated &&
-            <span>
-              Last updated at {new Date(lastUpdated).toLocaleTimeString()}.
-              {' '}
-            </span>
-          }
-          {!isFetching &&
-            <a href='#'
-               onClick={this.handleRefreshClick}>
-              Refresh
-            </a>
-          }
-        </p>
         {isFetching && programs.length === 0 &&
           <h2>Loading...</h2>
         }

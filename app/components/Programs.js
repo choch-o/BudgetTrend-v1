@@ -5,7 +5,7 @@ export default class Programs extends Component {
     return (
       <ul>
         {this.props.programs.map((program, i) =>
-          <li key={i}>{program.value}</li>
+          <li key={i}>{program.ACTV_NM}</li>
         )}
       </ul>
     )

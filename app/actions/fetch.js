@@ -1,5 +1,6 @@
 // import fetch from 'isomorphic-fetch'
-import request from 'superagent';
+import request from 'superagent'
+let jsonp = require('superagent-jsonp')
 export const REQUEST_PROGRAMS = 'REQUEST_PROGRAMS'
 export const RECEIVE_PROGRAMS = 'RECEIVE_PROGRAMS'
 export const SELECT_YEAR = 'SELECT_YEAR'
@@ -25,22 +26,54 @@ function requestPrograms(year) {
 }
 
 function receivePrograms(year, json) {
+  console.log("RECEIVE PROGRAMS")
+  console.log(json)
+  return {
+    type: RECEIVE_PROGRAMS,
+    year,
+    programs: json.body.ExpenditureBudgetAdd[1].row
+  }
+  /*
   return {
     type: RECEIVE_PROGRAMS,
     year,
     posts: json.data.children.map(child => child.data),
     receivedAt: Date.now()
   }
+  */
 }
 
 function fetchPrograms(year) {
-  request.get('http://openapi.openfiscaldata.go.kr/ExpenditureBudgetAdd?key=CNGZY1000038620161201092911MGTCR&FSCL_YY=2015&type=json')
-      .set('Accept', '*/*')
+  /*
+  request.get('http://openapi.openfiscaldata.go.kr/ExpenditureBudgetAdd?key=CNGZY1000038620161201092911MGTCR&FSCL_YY=2015&FLD_NM=교육&type=json')
+      .use(jsonp)
       .end(function(err, response) {
         if (err) return console.error(err);
         console.log("GET SUCCESS");
+        console.log(response);
       });
   return year;
+  */
+  return dispatch => {
+    dispatch(requestPrograms(year))
+    request.get('http://openapi.openfiscaldata.go.kr/ExpenditureBudgetAdd?key=CNGZY1000038620161201092911MGTCR&FSCL_YY=2015&FLD_NM=교육&type=json')
+        .use(jsonp)
+        //.end(response => response.json())
+        //.then(response => response.json())
+        .end(function(err, response) {
+          if (err) return console.error(err);
+          console.log("RESPONSE");
+          console.log(response);
+          dispatch(receivePrograms(year, response));
+        })
+        /*
+        .catch(e => {
+          console.log("RESPONSE ERROR");
+          console.log(e);
+        });
+        */
+  }
+
   /*
   return dispatch => {
     dispatch(requestPrograms(year))
@@ -69,10 +102,7 @@ function shouldFetchPrograms(state, year) {
 export function fetchProgramsIfNeeded(year) {
   return (dispatch, getState) => {
     if (shouldFetchPrograms(getState(), year)) {
-      console.log("TEST");
-      console.log(fetchPrograms(year));
-      return 0;
-      // return dispatch(fetchPrograms(year))
+      return dispatch(fetchPrograms(year))
     }
   }
 }
