@@ -44,20 +44,17 @@ function receivePrograms(year, json) {
 }
 
 function fetchPrograms(year) {
-  /*
-  request.get('http://openapi.openfiscaldata.go.kr/ExpenditureBudgetAdd?key=CNGZY1000038620161201092911MGTCR&FSCL_YY=2015&FLD_NM=교육&type=json')
-      .use(jsonp)
-      .end(function(err, response) {
-        if (err) return console.error(err);
-        console.log("GET SUCCESS");
-        console.log(response);
-      });
-  return year;
-  */
   return dispatch => {
     dispatch(requestPrograms(year))
-    var pindex = Math.floor(Math.random() * 30) + 1;
-    var url = 'http://openapi.openfiscaldata.go.kr/ExpenditureBudgetAdd?key=CNGZY1000038620161201092911MGTCR&FSCL_YY=2015&FLD_NM=교육&type=json&pIndex=' + pindex + '&pSize=4'
+    var pStart = 1;
+    var pEnd = 27;
+    var pIndices = new Array();
+    for (var i = pStart; i <= pEnd; i++) {
+      pIndices.push(i);
+    }
+    pIndices.shuffle();
+    var url = 'http://openapi.openfiscaldata.go.kr/ExpenditureBudgetAdd?key=CNGZY1000038620161201092911MGTCR&FSCL_YY=2015&FLD_NM=교육&type=json&pIndex=' + pIndices.pop() + '&pSize=4'
+    // var url = 'http://openapi.openfiscaldata.go.kr/ExpenditureBudgetAdd?key=CNGZY1000038620161201092911MGTCR&FSCL_YY=2015&FLD_NM=교육&type=json&pIndex=1&pSize=10'
     request.get(url)
         .use(jsonp)
         //.end(response => response.json())
@@ -100,6 +97,20 @@ function shouldFetchPrograms(state, year) {
     return programs.didInvalidate
   }
 }
+
+function arrayShuffle () {
+  var i = this.length, j, temp;
+  if ( i === 0 ) return false;
+  while ( --i ) {
+    j = Math.floor( Math.random() * ( i + 1 ) );
+    temp = this[i];
+    this[i] = this[j];
+    this[j] = temp;
+  }
+}
+
+Array.prototype.shuffle = arrayShuffle;
+
 
 export function fetchProgramsIfNeeded(year) {
   return (dispatch, getState) => {
