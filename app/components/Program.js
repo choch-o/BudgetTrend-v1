@@ -5,19 +5,20 @@ import FlatButton from 'material-ui/FlatButton';
 class Program extends React.Component {
   render() {
     const programStyle = {
-      height: 200
+      height: 136.3
     }
+    var value = this.props.value + '원';
     return (
       <div>
         <Paper zDepth={2}>
           <Card style={programStyle}>
             <CardHeader
               title={this.props.name}
-              subtitle={this.props.value}
+              subtitle={value}
             />
             <CardActions>
-              <FlatButton label="Action1" />
-              <FlatButton label="Action2" />
+              <FlatButton label="관련 있음" />
+              <FlatButton label="관련 없음" />
             </CardActions>
           </Card>
         </Paper>

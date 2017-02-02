@@ -56,7 +56,9 @@ function fetchPrograms(year) {
   */
   return dispatch => {
     dispatch(requestPrograms(year))
-    request.get('http://openapi.openfiscaldata.go.kr/ExpenditureBudgetAdd?key=CNGZY1000038620161201092911MGTCR&FSCL_YY=2015&FLD_NM=교육&type=json')
+    var pindex = Math.floor(Math.random() * 30) + 1;
+    var url = 'http://openapi.openfiscaldata.go.kr/ExpenditureBudgetAdd?key=CNGZY1000038620161201092911MGTCR&FSCL_YY=2015&FLD_NM=교육&type=json&pIndex=' + pindex + '&pSize=4'
+    request.get(url)
         .use(jsonp)
         //.end(response => response.json())
         //.then(response => response.json())

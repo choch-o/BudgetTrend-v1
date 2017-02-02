@@ -2,6 +2,8 @@ import React from 'react';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Paper from 'material-ui/Paper';
 import {List, ListItem} from 'material-ui/List';
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
 
 class Promises extends React.Component {
   render() {

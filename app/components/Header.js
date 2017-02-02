@@ -42,12 +42,12 @@ class Header extends React.Component {
               <span className="icon-bar"></span>
               <span className="icon-bar"></span>
             </button>
-            <IndexLink to="/" className="navbar-brand">Project name</IndexLink>
+            <IndexLink to="/" className="navbar-brand">BudgetTrend</IndexLink>
           </div>
           <div id="navbar" className="navbar-collapse collapse">
             <ul className="nav navbar-nav">
-              <li><IndexLink to="/" activeStyle={active}>Home</IndexLink></li>
-              <li><Link to="/contact" activeStyle={active}>Contact</Link></li>
+              <li><IndexLink to="/" activeStyle={active}>Tag</IndexLink></li>
+              <li><Link to="/contact" activeStyle={active}>Results</Link></li>
             </ul>
             {rightNav}
           </div>
