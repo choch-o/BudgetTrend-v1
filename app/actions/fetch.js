@@ -33,58 +33,27 @@ function receivePrograms(year, json) {
     year,
     programs: json.body.ExpenditureBudgetAdd[1].row
   }
-  /*
-  return {
-    type: RECEIVE_PROGRAMS,
-    year,
-    posts: json.data.children.map(child => child.data),
-    receivedAt: Date.now()
-  }
-  */
 }
 
 function fetchPrograms(year) {
   return dispatch => {
     dispatch(requestPrograms(year))
     var pStart = 1;
-    var pEnd = 27;
+    var pEnd = 5;
     var pIndices = new Array();
     for (var i = pStart; i <= pEnd; i++) {
       pIndices.push(i);
     }
     pIndices.shuffle();
-    var url = 'http://openapi.openfiscaldata.go.kr/ExpenditureBudgetAdd?key=CNGZY1000038620161201092911MGTCR&FSCL_YY=2015&FLD_NM=교육&type=json&pIndex=' + pIndices.pop() + '&pSize=4'
-    // var url = 'http://openapi.openfiscaldata.go.kr/ExpenditureBudgetAdd?key=CNGZY1000038620161201092911MGTCR&FSCL_YY=2015&FLD_NM=교육&type=json&pIndex=1&pSize=10'
-    request.get(url)
+    request.get('http://openapi.openfiscaldata.go.kr/ExpenditureBudgetAdd?key=CNGZY1000038620161201092911MGTCR&FSCL_YY=2015&FLD_NM=교육&type=json&pIndex=' + pIndices.pop() + '&pSize=20')
         .use(jsonp)
-        //.end(response => response.json())
-        //.then(response => response.json())
         .end(function(err, response) {
           if (err) return console.error(err);
           console.log("RESPONSE");
           console.log(response);
           dispatch(receivePrograms(year, response));
         })
-        /*
-        .catch(e => {
-          console.log("RESPONSE ERROR");
-          console.log(e);
-        });
-        */
   }
-
-  /*
-  return dispatch => {
-    dispatch(requestPrograms(year))
-    console.log(year)
-    return fetch(`http://openapi.openfiscaldata.go.kr/ExpenditureBudgetAdd?key=CNGZY1000038620161201092911MGTCR&type=json&pIndex=1&pSize=100&FSCL_YY=${year}`, {
-          mode: 'cors'
-        }
-      )
-      .then(response => response.json())
-      .then(json => dispatch(receivePrograms(year, json)))
-  }
-  */
 }
 
 function shouldFetchPrograms(state, year) {

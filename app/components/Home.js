@@ -11,10 +11,10 @@ class Home extends React.Component {
         <Messages messages={this.props.messages}/>
         <div className="row">
           <div className="col-sm-6">
-            <Promises paperHeight={600}/>
+            <Promises paperHeight={2000}/>
           </div>
           <div className="col-sm-6">
-            <Budgets paperHeight={600}/>
+            <Budgets paperHeight={2000}/>
           </div>
         </div>
       </div>

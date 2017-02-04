@@ -3,6 +3,8 @@ import {Tabs, Tab} from 'material-ui/Tabs';
 import Paper from 'material-ui/Paper';
 import {List, ListItem, makeSelectable} from 'material-ui/List';
 import injectTapEventPlugin from 'react-tap-event-plugin';
+import {Component, PropTypes} from 'react';
+import { selectPromise } from '../actions/promise'
 injectTapEventPlugin();
 
 let SelectableList = makeSelectable(List);
@@ -21,18 +23,20 @@ function wrapState(ComposedComponent) {
     }
 
     handleRequestChange = (event, index) => {
+      const { dispatch, selectPromise } = this.props
       this.setState({
         selectedIndex: index,
       });
+      dispatch(selectPromise(index))
     };
 
     render() {
       return (
         <ComposedComponent
-        value={this.state.selectedIndex}
-        onChange={this.handleRequestChange}
+          value={this.state.selectedIndex}
+          onChange={this.handleRequestChange}
         >
-        {this.props.children}
+          {this.props.children}
         </ComposedComponent>
       );
     }
@@ -52,78 +56,88 @@ class Promises extends React.Component {
       <Tabs>
       <Tab label="18대">
       <Paper zDepth={1} style={paperStyle}>
-      <SelectableList>
+      <SelectableList defaultValue={0}>
       <ListItem
-      primaryText="1. 가계부담 덜기"
-      primaryTogglesNestedList={true}
-      nestedItems={[
-        <ListItem key={1} primaryText="신용회복 신청과 승인 시 빚 50% 감면(기초수급자의 경우 70% 감면)"></ListItem>,
-        <ListItem key={2} primaryText="1천만원 한도 내에서 저금리 장기상환 대출로 전환"></ListItem>
-      ]}>
+        value={1}
+        primaryText="1. 가계부담 덜기"
+        primaryTogglesNestedList={true}
+        nestedItems={[
+          <ListItem value={2} key={1} primaryText="신용회복 신청과 승인 시 빚 50% 감면(기초수급자의 경우 70% 감면)"></ListItem>,
+          <ListItem value={3} key={2} primaryText="1천만원 한도 내에서 저금리 장기상환 대출로 전환"></ListItem>
+        ]}>
       </ListItem>
       <ListItem
-      primaryText="2. 확실한 국가책임 보육"
-      primaryTogglesNestedList={true}
-      nestedItems={[
-        <ListItem key={1} primaryText="만 5세까지 국가 무상보육 및 무상유아교육"></ListItem>
-      ]}>
+        value={4}
+        primaryText="2. 확실한 국가책임 보육"
+        primaryTogglesNestedList={true}
+        nestedItems={[
+          <ListItem value={5} key={1} primaryText="만 5세까지 국가 무상보육 및 무상유아교육"></ListItem>
+        ]}>
       </ListItem>
       <ListItem
-      primaryText="3. 교육비 걱정 덜기"
-      primaryTogglesNestedList={true}
-      nestedItems={[
-        <ListItem key={1} primaryText="고등학교 무상 교육"></ListItem>,
-        <ListItem key={2} primaryText="사교육비 부담 완화"></ListItem>,
-        <ListItem key={3} primaryText="대학등록금 부담 반으로 낮추기(셋째 자녀부터 대학등록금 100% 지원 등)"></ListItem>
-      ]}>
+        value={6}
+        primaryText="3. 교육비 걱정 덜기"
+        primaryTogglesNestedList={true}
+        nestedItems={[
+          <ListItem value={7} key={1} primaryText="고등학교 무상 교육"></ListItem>,
+          <ListItem value={8} key={2} primaryText="사교육비 부담 완화"></ListItem>,
+          <ListItem value={9} key={3} primaryText="대학등록금 부담 반으로 낮추기(셋째 자녀부터 대학등록금 100% 지원 등)"></ListItem>
+        ]}>
       </ListItem>
       <ListItem
-      primaryText="4. 생애주기별 맞춤형 복지정책 확실하게 추진"
-      primaryTogglesNestedList={true}
-      nestedItems={[
-        <ListItem key={1} primaryText="암, 심혈관, 뇌혈관, 희귀난치성 4대 중증질환의 경우 건강보험이 100% 책임"></ListItem>
-      ]}>
+        value={10}
+        primaryText="4. 생애주기별 맞춤형 복지정책 확실하게 추진"
+        primaryTogglesNestedList={true}
+        nestedItems={[
+          <ListItem value={11} key={1} primaryText="암, 심혈관, 뇌혈관, 희귀난치성 4대 중증질환의 경우 건강보험이 100% 책임"></ListItem>
+        ]}>
       </ListItem>
       <ListItem
-      primaryText="5. 창조경제를 통해 새로운 시장과 새로운 일자리 늘리기"
-      primaryTogglesNestedList={true}
-      nestedItems={[
-        <ListItem key={1} primaryText="IT, 문화, 컨텐츠, 서비스 산업에 대한 투자 대폭 확대"></ListItem>,
-        <ListItem key={2} primaryText="스펙초월시스템 마련"></ListItem>,
-        <ListItem key={3} primaryText="청년들의 해외취업 확대"></ListItem>
-      ]}>
+        value={12}
+        primaryText="5. 창조경제를 통해 새로운 시장과 새로운 일자리 늘리기"
+        primaryTogglesNestedList={true}
+        nestedItems={[
+          <ListItem value={13} key={1} primaryText="IT, 문화, 컨텐츠, 서비스 산업에 대한 투자 대폭 확대"></ListItem>,
+          <ListItem value={14} key={2} primaryText="스펙초월시스템 마련"></ListItem>,
+          <ListItem value={15} key={3} primaryText="청년들의 해외취업 확대"></ListItem>
+        ]}>
       </ListItem>
       <ListItem
-      primaryText="6. 근로자의 일자리 지키기"
-      primaryTogglesNestedList={true}
-      nestedItems={[
-        <ListItem key={1} primaryText="60세로 정년 연장"></ListItem>,
-        <ListItem key={2} primaryText="해고 요건 강화"></ListItem>,
-        <ListItem key={3} primaryText="일방적인 구조조정이나 정리해고 방지를 위해 사회적인 대타협기구 설립"></ListItem>
-      ]}>
+        value={16}
+        primaryText="6. 근로자의 일자리 지키기"
+        primaryTogglesNestedList={true}
+        nestedItems={[
+          <ListItem value={17} key={1} primaryText="60세로 정년 연장"></ListItem>,
+          <ListItem value={18} key={2} primaryText="해고 요건 강화"></ListItem>,
+          <ListItem value={19} key={3} primaryText="일방적인 구조조정이나 정리해고 방지를 위해 사회적인 대타협기구 설립"></ListItem>
+        ]}>
       </ListItem>
       <ListItem
-      primaryText="7. 근로자의 삶의 질 올리기"
-      primaryTogglesNestedList={true}
-      nestedItems={[
-        <ListItem key={1} primaryText="장시간 근로 관행 개혁"></ListItem>,
-        <ListItem key={2} primaryText="공공부문부터 비정규직 근로자 정규직 전환"></ListItem>,
-        <ListItem key={3} primaryText="비정규직 차별 회사에 대한 징벌적 금전보상제도 적용"></ListItem>,
-        <ListItem key={4} primaryText="사회보험 국가지원 확대"></ListItem>
-      ]}>
+        value={20}
+        primaryText="7. 근로자의 삶의 질 올리기"
+        primaryTogglesNestedList={true}
+        nestedItems={[
+          <ListItem value={21} key={1} primaryText="장시간 근로 관행 개혁"></ListItem>,
+          <ListItem value={22} key={2} primaryText="공공부문부터 비정규직 근로자 정규직 전환"></ListItem>,
+          <ListItem value={23} key={3} primaryText="비정규직 차별 회사에 대한 징벌적 금전보상제도 적용"></ListItem>,
+          <ListItem value={24} key={4} primaryText="사회보험 국가지원 확대"></ListItem>
+        ]}>
       </ListItem>
       <ListItem
-      primaryText="8. 국민안심프로젝트 추진"
-      primaryTogglesNestedList={true}
-      nestedItems={[
-        <ListItem key={1} primaryText="성폭력, 학교폭력, 가정파괴범, 불량식품 등 4대 사회악 뿌리뽑기"></ListItem>
-      ]}>
+        value={25}
+        primaryText="8. 국민안심프로젝트 추진"
+        primaryTogglesNestedList={true}
+        nestedItems={[
+          <ListItem value={26} key={1} primaryText="성폭력, 학교폭력, 가정파괴범, 불량식품 등 4대 사회악 뿌리뽑기"></ListItem>
+        ]}>
       </ListItem>
       <ListItem
-      primaryText="9. 대기업과 중소기업 상생의 경제민주화">
+        value={27}
+        primaryText="9. 대기업과 중소기업 상생의 경제민주화">
       </ListItem>
       <ListItem
-      primaryText="10. 지역균형발전과 대탕평 인사">
+        value={28}
+        primaryText="10. 지역균형발전과 대탕평 인사">
       </ListItem>
       </SelectableList>
       </Paper>

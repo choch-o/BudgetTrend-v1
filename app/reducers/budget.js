@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { ADD_PROGRAM, TOGGLE_PROGRAM, SET_VISIBILITY_FILTER, VisibilityFilters } from '../actions/budget'
+import { ADD_PROGRAM, DELETE_PROGRAM, TOGGLE_PROGRAM, SET_VISIBILITY_FILTER, VisibilityFilters } from '../actions/budget'
 const { SHOW_ALL } = VisibilityFilters
 
 function visibilityFilter(state = SHOW_ALL, action) {
@@ -11,33 +11,32 @@ function visibilityFilter(state = SHOW_ALL, action) {
   }
 }
 
-function programs(state = [], action) {
+function selectedPrograms(state = [], action) {
   switch (action.type) {
     case ADD_PROGRAM:
+      console.log("ADD PROGRAM")
       return [
         ...state,
         {
-          text: action.text,
-          completed: false
+          name: action.name,
+          value: action.value
         }
       ]
-    case TOGGLE_PROGRAM:
-      return state.map((program, index) => {
-        if (index === action.index) {
-          return Object.assign({}, program, {
-            completed: !program.completed
-          })
-        }
-        return program
-      })
+    case DELETE_PROGRAM:
+      console.log("DELETE PROGRAM")
+      state.splice(action.index, 1)
+      return state
     default:
       return state
   }
 }
 
+export { selectedPrograms }
+/*
 const programApp = combineReducers({
   visibilityFilter,
   programs
 })
 
 export default programApp
+*/

@@ -2,6 +2,7 @@
  * action types
  */
 export const ADD_PROGRAM = 'ADD_PROGRAM'
+export const DELETE_PROGRAM = 'DELETE_PROGRAM'
 export const TOGGLE_PROGRAM = 'TOGGLE_PROGRAM'
 export const SET_VISIBILITY_FILTER = 'SET_VISIBILITY_FILTER'
 
@@ -17,15 +18,32 @@ export const VisibilityFilters = {
 /*
  * action creators
  */
-export function addProgram(text) {
+export function addProgram(name, value) {
   return {
     type: ADD_PROGRAM,
-    text
+    name,
+    value
   }
 }
 
-export function toggleProgram(index) {
-  return { type: TOGGLE_PROGRAM, index }
+export function deleteProgram(index) {
+  return {
+    type: DELETE_PROGRAM,
+    index
+  }
+}
+
+export function toggleProgram(name, value) {
+  return (dispatch, getState) => {
+    var index = -1;
+    for (var i = 0; i < getState().selectedPrograms.length; i++) {
+      if (getState().selectedPrograms[i].name == name) {
+        index = i
+      }
+    }
+    if (index > -1) return dispatch(deleteProgram(index))
+    else return dispatch(addProgram(name, value))
+  }
 }
 
 export function setVisibilityFilter(filter) {

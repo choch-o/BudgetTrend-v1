@@ -1,19 +1,50 @@
 import React, { Component, PropTypes } from 'react'
 import Program from './Program'
 import Paper from 'material-ui/Paper'
+import { GridList, GridTile } from 'material-ui/GridList';
+import Subheader from 'material-ui/Subheader';
+import FlatButton from 'material-ui/FlatButton';
 import AsyncApp from '../containers/AsyncApp'
 import { connect } from 'react-redux'
 import { addProgram, toggleProgram } from '../actions/budget'
 import { selectYear, fetchProgramsIfNeeded, invalidateYear } from '../actions/fetch'
 import Picker from '../components/Picker'
-import Programs from '../components/Programs'
+// import Programs from '../components/Programs'
 // import AsyncApp from '../containers/AsyncApp'
+
+const styles = {
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'space-around',
+  },
+  gridList: {
+    width: '100%',
+    height: 600,
+    overflowY: 'auto',
+  },
+  gridTile: {
+    width: '100%',
+    height: 100,
+    backgroundColor: "#f2f8f6",
+    justifyContent: 'center', 
+    lineHeight: '170%'
+  },
+  selectedGridTile: {
+    width: '100%',
+    height: 100,
+    backgroundColor: "#c0ddd4",
+    justifyContent: 'center', 
+    lineHeight: '170%'
+  }
+};
 
 class Budgets extends React.Component {
   constructor(props) {
     super(props)
     this.handleChange = this.handleChange.bind(this)
     this.handleRefreshClick = this.handleRefreshClick.bind(this)
+    this.handleBudgetClick = this.handleBudgetClick.bind(this)
   }
 
   componentDidMount() {
@@ -40,6 +71,10 @@ class Budgets extends React.Component {
     dispatch(fetchProgramsIfNeeded(selectedYear))
   }
 
+  handleBudgetClick(name, value) {
+    this.props.dispatch(toggleProgram(name, value))
+  }
+
   render() {
     const { selectedYear, programs, isFetching, lastUpdated } = this.props
     const refreshStyle = {
@@ -61,10 +96,27 @@ class Budgets extends React.Component {
           <h2>Empty.</h2>
         }
         {programs.length > 0 &&
-          <Paper zDepth={1}>
-            {this.props.programs.map((program, i) =>
-              <Program key={i} name={program.ACTV_NM} value={program.Y_YY_DFN_MEDI_KCUR_AMT}></Program>
-            )}
+          <Paper zDepth={1}
+            style={styles.root}
+            >
+            <GridList
+              cellHeight={100}
+              style={styles.gridList}
+              cols={4}
+            >
+              <Subheader>사용 예산</Subheader>
+              {this.props.programs.map((program, i) =>
+                <GridTile key={i}>
+                  <FlatButton
+                    style={styles.gridTile}
+                    onClick={() => this.handleBudgetClick(program.ACTV_NM, program.Y_YY_DFN_MEDI_KCUR_AMT)}>
+                    {program.ACTV_NM}
+                    <br />
+                    <small>{program.Y_YY_DFN_MEDI_KCUR_AMT + '원'}</small>
+                  </FlatButton>
+                </GridTile>
+              )}
+            </GridList>
           </Paper>
         }
         <h2> </h2>
