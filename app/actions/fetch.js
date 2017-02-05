@@ -35,17 +35,10 @@ function receivePrograms(year, json) {
   }
 }
 
-function fetchPrograms(year) {
+function fetchPrograms(year, pIndex) {
   return dispatch => {
     dispatch(requestPrograms(year))
-    var pStart = 1;
-    var pEnd = 5;
-    var pIndices = new Array();
-    for (var i = pStart; i <= pEnd; i++) {
-      pIndices.push(i);
-    }
-    pIndices.shuffle();
-    request.get('http://openapi.openfiscaldata.go.kr/ExpenditureBudgetAdd?key=CNGZY1000038620161201092911MGTCR&FSCL_YY=2015&FLD_NM=교육&type=json&pIndex=' + pIndices.pop() + '&pSize=20')
+    request.get('http://openapi.openfiscaldata.go.kr/ExpenditureBudgetAdd?key=CNGZY1000038620161201092911MGTCR&FSCL_YY=2015&FLD_NM=교육&type=json&pIndex=' + pIndex + '&pSize=20')
         .use(jsonp)
         .end(function(err, response) {
           if (err) return console.error(err);
@@ -81,10 +74,10 @@ function arrayShuffle () {
 Array.prototype.shuffle = arrayShuffle;
 
 
-export function fetchProgramsIfNeeded(year) {
+export function fetchProgramsIfNeeded(year, pIndex) {
   return (dispatch, getState) => {
     if (shouldFetchPrograms(getState(), year)) {
-      return dispatch(fetchPrograms(year))
+      return dispatch(fetchPrograms(year, pIndex))
     }
   }
 }

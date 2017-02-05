@@ -30,6 +30,7 @@ var User = require('./models/User');
 // Controllers
 var userController = require('./controllers/user');
 var contactController = require('./controllers/contact');
+var budgetController = require('./controllers/budget');
 
 // React and Server-Side Rendering
 var routes = require('./app/routes');
@@ -39,7 +40,8 @@ var app = express();
 
 var compiler = webpack(config);
 
-mongoose.connect(process.env.MONGODB);
+// mongoose.connect(process.env.MONGODB);
+mongoose.connect('mongodb://localhost/budgettrend');
 mongoose.connection.on('error', function() {
   console.log('MongoDB Connection Error. Please make sure that MongoDB is running.');
   process.exit(1);
@@ -92,6 +94,8 @@ app.post('/login', userController.loginPost);
 app.post('/forgot', userController.forgotPost);
 app.post('/reset/:token', userController.resetPost);
 app.get('/unlink/:provider', userController.ensureAuthenticated, userController.unlink);
+
+app.post('/api/save', budgetController.saveSelectedPrograms);
 
 // React server rendering
 app.use(function(req, res) {
