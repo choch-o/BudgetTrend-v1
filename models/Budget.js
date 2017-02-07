@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 var budgetSchema = new mongoose.Schema({
-  name: String,
+  label: String,
   value: Number,
   count: Number
 });

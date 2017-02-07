@@ -96,6 +96,7 @@ app.post('/reset/:token', userController.resetPost);
 app.get('/unlink/:provider', userController.ensureAuthenticated, userController.unlink);
 
 app.post('/api/save', budgetController.saveSelectedPrograms);
+app.get('/api/popular_tags', budgetController.getPopularTags);
 
 // React server rendering
 app.use(function(req, res) {

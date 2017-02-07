@@ -36,7 +36,21 @@ const styles = {
     backgroundColor: "#c0ddd4",
     justifyContent: 'center', 
     lineHeight: '170%'
-  }
+  },
+  nextButton: {
+    width: '100%',
+    color: '#eee',
+    backgroundColor: "#009999",
+    fontSize: 18,
+    textAlign: 'center', 
+  },
+  submitButton: {
+    width: '100%',
+    color: '#fff',
+    backgroundColor: "#ffb944",
+    fontSize: 18,
+    textAlign: 'center', 
+  },
 };
 
 class Budgets extends React.Component {
@@ -113,11 +127,6 @@ class Budgets extends React.Component {
 
   render() {
     const { selectedYear, programs, isFetching, lastUpdated } = this.props
-    const refreshStyle = {
-      color: '#111',
-      fontSize: 18,
-      padding: 10
-    }
     /*
     <Picker value={selectedYear}
             onChange={this.handleChange}
@@ -140,7 +149,7 @@ class Budgets extends React.Component {
               style={styles.gridList}
               cols={4}
             >
-              <Subheader>사용 예산</Subheader>
+              <Subheader>Select all budget programs related to 교육비 걱정 덜기</Subheader>
               {this.props.programs.map((program, i) =>
                 <GridTile key={i}>
                   <FlatButton
@@ -148,7 +157,7 @@ class Budgets extends React.Component {
                     onClick={() => this.handleBudgetClick(i, program.ACTV_NM, program.Y_YY_DFN_MEDI_KCUR_AMT)}>
                     {program.ACTV_NM}
                     <br />
-                    <small>{program.Y_YY_DFN_MEDI_KCUR_AMT + '원'}</small>
+                    <small>{program.Y_YY_DFN_MEDI_KCUR_AMT.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ',000 원'}</small>
                   </FlatButton>
                 </GridTile>
               )}
@@ -157,16 +166,16 @@ class Budgets extends React.Component {
         }
         <h2> </h2>
         {!isFetching && !this.state.isTaggingDone &&
-          <a style={refreshStyle} href='#'
+          <FlatButton style={styles.nextButton} href='#'
              onClick={this.handleRefreshClick}>
-             다음
-          </a>
+             NEXT
+          </FlatButton>
         }
         {!isFetching && this.state.isTaggingDone &&
-          <a style={refreshStyle} href='#'
+          <FlatButton style={styles.submitButton} href='#'
             onClick={this.handleSaveClick}>
             SUBMIT
-          </a>
+          </FlatButton>
         }
       </div>
     );

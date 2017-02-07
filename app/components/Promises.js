@@ -9,6 +9,16 @@ injectTapEventPlugin();
 
 let SelectableList = makeSelectable(List);
 
+const styles = {
+  selectedPromise: {
+    backgroundColor: '#ffa500'    
+  },
+  selectedSubpromise: {
+    backgroundColor: '#ffedcc',
+    fontSize: 14
+  },
+}
+
 function wrapState(ComposedComponent) {
   return class SelectableList extends Component {
     static propTypes = {
@@ -78,10 +88,17 @@ class Promises extends React.Component {
         value={6}
         primaryText="3. 교육비 걱정 덜기"
         primaryTogglesNestedList={true}
+        style={styles.selectedPromise}
         nestedItems={[
-          <ListItem value={7} key={1} primaryText="고등학교 무상 교육"></ListItem>,
-          <ListItem value={8} key={2} primaryText="사교육비 부담 완화"></ListItem>,
-          <ListItem value={9} key={3} primaryText="대학등록금 부담 반으로 낮추기(셋째 자녀부터 대학등록금 100% 지원 등)"></ListItem>
+          <ListItem value={7} key={1} primaryText="고등학교 무상 교육"
+            style={styles.selectedSubpromise}
+          />,
+          <ListItem value={8} key={2} primaryText="사교육비 부담 완화"
+            style={styles.selectedSubpromise}
+          />,
+          <ListItem value={9} key={3} primaryText="대학등록금 부담 반으로 낮추기(셋째 자녀부터 대학등록금 100% 지원 등)"
+            style={styles.selectedSubpromise}
+          />
         ]}>
       </ListItem>
       <ListItem
