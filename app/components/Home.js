@@ -19,6 +19,7 @@ class Home extends React.Component {
             <Promises paperHeight={2000}/>
           </div>
           <div className="col-sm-8">
+            
             {!isSubmitted &&  
               <Budgets paperHeight={2000}/>
             }
@@ -35,7 +36,7 @@ class Home extends React.Component {
 const mapStateToProps = (state) => {
   console.log("HOME STATE")
   console.log(state)
-  const { selectedPrograms } = state
+  const { selectedPrograms, selectedCategory } = state
   const {
     isSubmitted
   } = selectedPrograms

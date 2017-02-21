@@ -7,7 +7,7 @@ import FlatButton from 'material-ui/FlatButton';
 import AsyncApp from '../containers/AsyncApp'
 import { connect } from 'react-redux'
 import { addProgram, toggleProgram, saveSelectedPrograms } from '../actions/budget'
-import { selectYear, fetchProgramsIfNeeded, invalidateYear } from '../actions/fetch'
+import { selectCategory, fetchProgramsIfNeeded, invalidateCategory } from '../actions/fetch'
 import Picker from '../components/Picker'
 // import Programs from '../components/Programs'
 // import AsyncApp from '../containers/AsyncApp'
@@ -72,8 +72,8 @@ class Budgets extends React.Component {
   }
 
   componentDidMount() {
-    const { dispatch, selectedYear } = this.props
-    dispatch(fetchProgramsIfNeeded(selectedYear, this.state.pIndices.pop()))
+    const { dispatch, selectedCategory } = this.props
+    dispatch(fetchProgramsIfNeeded(selectedCategory, this.state.pIndices.pop()))
     this.setState(this.state)
   }
 
@@ -84,21 +84,21 @@ class Budgets extends React.Component {
     }*/
   }
 
-  handleChange(nextYear) {
-    this.props.dispatch(selectYear(nextYear))
+  handleChange(nextCategory) {
+    this.props.dispatch(selectCategory(nextCategory))
   }
 
   handleRefreshClick(e) {
     e.preventDefault()
     this.setState({ selected: [] })
-    const { dispatch, selectedYear } = this.props
-    dispatch(invalidateYear(selectedYear))
+    const { dispatch, selectedCategory } = this.props
+    dispatch(invalidateCategory(selectedCategory))
     console.log("pIndices")
     console.log(this.state.pIndices)
     if (this.state.pIndices.length > 0) {
-      dispatch(fetchProgramsIfNeeded(selectedYear, this.state.pIndices.pop()))
+      dispatch(fetchProgramsIfNeeded(selectedCategory, this.state.pIndices.pop()))
     } else {
-      dispatch(fetchProgramsIfNeeded(selectedYear, 5))
+      dispatch(fetchProgramsIfNeeded(selectedCategory, 5))
       this.setState({isTaggingDone: true})
     }
   }
@@ -126,7 +126,7 @@ class Budgets extends React.Component {
   }
 
   render() {
-    const { selectedYear, programs, isFetching, lastUpdated } = this.props
+    const { selectedCategory, programs, isFetching, lastUpdated } = this.props
     /*
     <Picker value={selectedYear}
             onChange={this.handleChange}
@@ -183,7 +183,7 @@ class Budgets extends React.Component {
 }
 
 AsyncApp.propTypes = {
-  selectedYear: PropTypes.number.isRequired,
+  selectedCategory: PropTypes.number.isRequired,
   programs: PropTypes.array.isRequired,
   isFetching: PropTypes.bool.isRequired,
   lastUpdated: PropTypes.number,
@@ -194,18 +194,18 @@ AsyncApp.propTypes = {
 function mapStateToProps(state) {
   console.log("STATE")
   console.log(state)
-  const { selectedYear, programsByYear, selectedPrograms } = state
+  const { selectedCategory, programsByCategory, selectedPrograms } = state
   const {
     isFetching,
     lastUpdated,
     items: programs
-  } = programsByYear[selectedYear] || {
+  } = programsByCategory[selectedCategory] || {
     isFetching: true,
     items: []
   }
 
   return {
-    selectedYear,
+    selectedCategory,
     programs,
     isFetching,
     lastUpdated,

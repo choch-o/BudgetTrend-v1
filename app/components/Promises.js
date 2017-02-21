@@ -1,10 +1,12 @@
 import React from 'react';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import Paper from 'material-ui/Paper';
-import {List, ListItem, makeSelectable} from 'material-ui/List';
+import {List, ListItem, makeSelectable, Subheader} from 'material-ui/List';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import {Component, PropTypes} from 'react';
 import { selectPromise } from '../actions/promise'
+import { selectCategory, fetchProgramsIfNeeded } from '../actions/fetch'
+import { connect } from 'react-redux'
 injectTapEventPlugin();
 
 let SelectableList = makeSelectable(List);
@@ -17,6 +19,12 @@ const styles = {
     backgroundColor: '#ffedcc',
     fontSize: 14
   },
+  subpromise: {
+    paddingLeft: 40,
+    paddingRight: 20
+  },
+  promise: {
+  }
 }
 
 function wrapState(ComposedComponent) {
@@ -37,6 +45,8 @@ function wrapState(ComposedComponent) {
       this.setState({
         selectedIndex: index,
       });
+      console.log("Promise selected")
+      console.log(index)
       dispatch(selectPromise(index))
     };
 
@@ -56,109 +66,137 @@ function wrapState(ComposedComponent) {
 SelectableList = wrapState(SelectableList);
 
 class Promises extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      promises: [
+        {
+          text: "1. 가계부담 덜기",
+          subpromises: [
+            "신용회복 신청과 승인 시 빚 50% 감면(기초수급자의 경우 70% 감면",
+            "1천만원 한도 내에서 저금리 장기상환 대출로 전환"
+          ]
+        },
+        {
+          text: "2. 확실한 국가책임 보육",
+          subpromises: [
+            "만 5세까지 국가 무상보육 및 무상유아교육"
+          ]
+        },
+        {
+          text: "3. 교육비 걱정 덜기",
+          subpromises: [
+            "고등학교 무상 교육",
+            "사교육비 부담 완화",
+            "대학등록금 부담 반으로 낮추기(셋째 자녀부터 대학 등록금 100% 지원 등)"
+          ]
+        },
+        {
+          text: "4. 생애주기별 맞춤형 복지정책 확실하게 추진",
+          subpromises: [
+            "암, 심혈관, 뇌혈관, 희귀난치성 4대 중증질환의 경우 건강보험이 100% 책임"
+          ]
+        },
+        {
+          text: "5. 창조경제를 통해 새로운 시장과 새로운 일자리 늘리기",
+          subpromises: [
+            "IT, 문화, 컨텐츠, 서비스 산업에 대한 투자 대폭 확대",
+            "스펙초월시스템 마련",
+            "청년들의 해외취업 확대"
+          ]
+        },
+        {
+          text: "6. 근로자의 일자리 지키기",
+          subpromises: [
+            "60세로 정년 연장",
+            "해고 요건 강화",
+            "일방적인 구조조정이나 정리해고 방지를 위해 사회적인 대타협기구 설립"
+          ]
+        },
+        {
+          text: "7. 근로자의 삶의 질 올리기",
+          subpromises: [
+            "장시간 근로 관행 개혁",
+            "공공부문부터 비정규직 근로자 정규직 전환",
+            "비정규직 차별 회사에 대한 징벌적 금전보상제도 적용",
+            "사회보험 국가지원 확대"
+          ]
+        },
+        {
+          text: "8. 국민안심프로젝트 추진",
+          subpromises: [
+            "성폭력, 학교폭력, 가정파괴범, 불량식품 등 4대 사회악 뿌리뽑기"
+          ]
+        },
+        {
+          text: "9. 대기업과 중소기엄 상생의 경제민주화",
+          subpromises: []
+        },
+        {
+          text: "10. 지역균형발전과 대탕평 인사",
+          subpromises: []
+        }
+      ],
+    }
+
+    this.renderPromises = this.renderPromises.bind(this)
+    this.onPromiseClick = this.onPromiseClick.bind(this)
+  }
+
+  renderSubpromises(promise) {
+    if (promise.subpromises.length > 0) {
+      return promise.subpromises.map((subpromise, index) => (
+        <div style={ styles.subpromise } key={index}>
+          <p>{subpromise}</p>
+        </div>
+      ));
+    }
+    else return [];
+  }
+
+  onPromiseClick(promise) {
+    console.log("On promise click")
+    console.log(promise.props.value)
+    this.setState({
+      selectedIndex: promise.props.value - 1
+    })
+    this.props.dispatch(selectCategory(promise.props.value)) 
+    this.props.dispatch(fetchProgramsIfNeeded(this.props.selectedCategory, 1))
+  }
+
+  renderPromises() {
+    if (this.state.promises.length > 0) {
+      return this.state.promises.map((promise, index) => (
+        <ListItem
+          value={index + 1}
+          key={index}
+          primaryText={ promise.text }
+          primaryTogglesNestedList={true}
+          onNestedListToggle={ this.onPromiseClick }
+          nestedItems={ this.renderSubpromises(promise) }
+          style={ index == this.state.selectedIndex ? styles.selectedPromise : styles.promise }     
+        />
+      ));
+    }
+    else return [];
+  }
+
   render() {
     const h = this.props.paperHeight;
     const paperStyle = {
       height: {h},
     }
+    const promises = this.renderPromises();
     return (
       <div>
       <Tabs>
-      <Tab label="18대">
-      <Paper zDepth={1} style={paperStyle}>
-      <SelectableList defaultValue={0}>
-      <ListItem
-        value={1}
-        primaryText="1. 가계부담 덜기"
-        primaryTogglesNestedList={true}
-        nestedItems={[
-          <ListItem value={2} key={1} primaryText="신용회복 신청과 승인 시 빚 50% 감면(기초수급자의 경우 70% 감면)"></ListItem>,
-          <ListItem value={3} key={2} primaryText="1천만원 한도 내에서 저금리 장기상환 대출로 전환"></ListItem>
-        ]}>
-      </ListItem>
-      <ListItem
-        value={4}
-        primaryText="2. 확실한 국가책임 보육"
-        primaryTogglesNestedList={true}
-        nestedItems={[
-          <ListItem value={5} key={1} primaryText="만 5세까지 국가 무상보육 및 무상유아교육"></ListItem>
-        ]}>
-      </ListItem>
-      <ListItem
-        value={6}
-        primaryText="3. 교육비 걱정 덜기"
-        primaryTogglesNestedList={true}
-        style={styles.selectedPromise}
-        nestedItems={[
-          <ListItem value={7} key={1} primaryText="고등학교 무상 교육"
-            style={styles.selectedSubpromise}
-          />,
-          <ListItem value={8} key={2} primaryText="사교육비 부담 완화"
-            style={styles.selectedSubpromise}
-          />,
-          <ListItem value={9} key={3} primaryText="대학등록금 부담 반으로 낮추기(셋째 자녀부터 대학등록금 100% 지원 등)"
-            style={styles.selectedSubpromise}
-          />
-        ]}>
-      </ListItem>
-      <ListItem
-        value={10}
-        primaryText="4. 생애주기별 맞춤형 복지정책 확실하게 추진"
-        primaryTogglesNestedList={true}
-        nestedItems={[
-          <ListItem value={11} key={1} primaryText="암, 심혈관, 뇌혈관, 희귀난치성 4대 중증질환의 경우 건강보험이 100% 책임"></ListItem>
-        ]}>
-      </ListItem>
-      <ListItem
-        value={12}
-        primaryText="5. 창조경제를 통해 새로운 시장과 새로운 일자리 늘리기"
-        primaryTogglesNestedList={true}
-        nestedItems={[
-          <ListItem value={13} key={1} primaryText="IT, 문화, 컨텐츠, 서비스 산업에 대한 투자 대폭 확대"></ListItem>,
-          <ListItem value={14} key={2} primaryText="스펙초월시스템 마련"></ListItem>,
-          <ListItem value={15} key={3} primaryText="청년들의 해외취업 확대"></ListItem>
-        ]}>
-      </ListItem>
-      <ListItem
-        value={16}
-        primaryText="6. 근로자의 일자리 지키기"
-        primaryTogglesNestedList={true}
-        nestedItems={[
-          <ListItem value={17} key={1} primaryText="60세로 정년 연장"></ListItem>,
-          <ListItem value={18} key={2} primaryText="해고 요건 강화"></ListItem>,
-          <ListItem value={19} key={3} primaryText="일방적인 구조조정이나 정리해고 방지를 위해 사회적인 대타협기구 설립"></ListItem>
-        ]}>
-      </ListItem>
-      <ListItem
-        value={20}
-        primaryText="7. 근로자의 삶의 질 올리기"
-        primaryTogglesNestedList={true}
-        nestedItems={[
-          <ListItem value={21} key={1} primaryText="장시간 근로 관행 개혁"></ListItem>,
-          <ListItem value={22} key={2} primaryText="공공부문부터 비정규직 근로자 정규직 전환"></ListItem>,
-          <ListItem value={23} key={3} primaryText="비정규직 차별 회사에 대한 징벌적 금전보상제도 적용"></ListItem>,
-          <ListItem value={24} key={4} primaryText="사회보험 국가지원 확대"></ListItem>
-        ]}>
-      </ListItem>
-      <ListItem
-        value={25}
-        primaryText="8. 국민안심프로젝트 추진"
-        primaryTogglesNestedList={true}
-        nestedItems={[
-          <ListItem value={26} key={1} primaryText="성폭력, 학교폭력, 가정파괴범, 불량식품 등 4대 사회악 뿌리뽑기"></ListItem>
-        ]}>
-      </ListItem>
-      <ListItem
-        value={27}
-        primaryText="9. 대기업과 중소기업 상생의 경제민주화">
-      </ListItem>
-      <ListItem
-        value={28}
-        primaryText="10. 지역균형발전과 대탕평 인사">
-      </ListItem>
-      </SelectableList>
-      </Paper>
-      </Tab>
+        <Tab label="18대">
+          <Paper zDepth={1} style={paperStyle}>
+            <SelectableList defaultValue={0}>
+              {promises}
+            </SelectableList>
+          </Paper>
+        </Tab>
       <Tab label="17대">
       <Paper zDepth={1}>
       <List>
@@ -241,4 +279,9 @@ class Promises extends React.Component {
   }
 }
 
-export default Promises;
+function mapStateToProps(state) {
+  const { selectedCategory } = state
+  return { selectedCategory }
+}
+
+export default connect(mapStateToProps)(Promises);

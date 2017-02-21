@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux'
 import {
-  SELECT_YEAR, INVALIDATE_YEAR, REQUEST_PROGRAMS, RECEIVE_PROGRAMS
+  SELECT_CATEGORY, INVALIDATE_CATEGORY, REQUEST_PROGRAMS, RECEIVE_PROGRAMS
 } from '../actions/fetch'
 
-function selectedYear(state = 2015, action) {
+function selectedCategory(state = "교육", action) {
   switch (action.type) {
-  case SELECT_YEAR:
-    return action.year
+  case SELECT_CATEGORY:
+    return action.category
   default:
     return state
   }
@@ -18,7 +18,7 @@ function programs(state = {
   items: []
 }, action) {
   switch (action.type) {
-    case INVALIDATE_YEAR:
+    case INVALIDATE_CATEGORY:
       return Object.assign({}, state, {
         didInvalidate: true
       })
@@ -39,17 +39,17 @@ function programs(state = {
   }
 }
 
-function programsByYear(state = { }, action) {
+function programsByCategory(state = { }, action) {
   switch (action.type) {
-    case INVALIDATE_YEAR:
+    case INVALIDATE_CATEGORY:
     case RECEIVE_PROGRAMS:
     case REQUEST_PROGRAMS:
       return Object.assign({}, state, {
-        [action.year]: programs(state[action.year], action)
+        [action.category]: programs(state[action.category], action)
       })
     default:
       return state
   }
 }
 
-export { selectedYear, programsByYear }
+export { selectedCategory, programsByCategory }
