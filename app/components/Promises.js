@@ -5,7 +5,7 @@ import {List, ListItem, makeSelectable, Subheader} from 'material-ui/List';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import {Component, PropTypes} from 'react';
 import { selectPromise } from '../actions/promise'
-import { selectCategory, fetchProgramsIfNeeded } from '../actions/fetch'
+import { selectAndFetch, fetchProgramsIfNeeded } from '../actions/fetch'
 import { connect } from 'react-redux'
 injectTapEventPlugin();
 
@@ -160,8 +160,8 @@ class Promises extends React.Component {
     this.setState({
       selectedIndex: promise.props.value - 1
     })
-    this.props.dispatch(selectCategory(promise.props.value)) 
-    this.props.dispatch(fetchProgramsIfNeeded(this.props.selectedCategory, 1))
+    this.props.dispatch(selectAndFetch(promise.props.value)) 
+    // this.props.dispatch(fetchProgramsIfNeeded(this.props.selectedCategory, 1))
   }
 
   renderPromises() {

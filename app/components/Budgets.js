@@ -72,9 +72,11 @@ class Budgets extends React.Component {
   }
 
   componentDidMount() {
+    /*
     const { dispatch, selectedCategory } = this.props
     dispatch(fetchProgramsIfNeeded(selectedCategory, this.state.pIndices.pop()))
     this.setState(this.state)
+    */
   }
 
   componentWillReceiveProps(nextProps) {
@@ -126,7 +128,7 @@ class Budgets extends React.Component {
   }
 
   render() {
-    const { selectedCategory, programs, isFetching, lastUpdated } = this.props
+    const { dispatch, selectedCategory, programs, isFetching, lastUpdated } = this.props
     /*
     <Picker value={selectedYear}
             onChange={this.handleChange}
@@ -134,11 +136,8 @@ class Budgets extends React.Component {
     */
     return (
       <div className="budgets">
-        {isFetching && programs.length === 0 &&
+        {programs.length === 0 &&
           <h2>Loading...</h2>
-        }
-        {!isFetching && programs.length === 0 &&
-          <h2>Empty.</h2>
         }
         {programs.length > 0 &&
           <Paper zDepth={1}
@@ -149,7 +148,7 @@ class Budgets extends React.Component {
               style={styles.gridList}
               cols={4}
             >
-              <Subheader>Select all budget programs related to 교육비 걱정 덜기</Subheader>
+              <Subheader>Select all budget programs related to {this.props.selectedCategory}</Subheader>
               {this.props.programs.map((program, i) =>
                 <GridTile key={i}>
                   <FlatButton
@@ -165,13 +164,13 @@ class Budgets extends React.Component {
           </Paper>
         }
         <h2> </h2>
-        {!isFetching && !this.state.isTaggingDone &&
+        {!this.state.isTaggingDone &&
           <FlatButton style={styles.nextButton} href='#'
              onClick={this.handleRefreshClick}>
              NEXT
           </FlatButton>
         }
-        {!isFetching && this.state.isTaggingDone &&
+        {this.state.isTaggingDone &&
           <FlatButton style={styles.submitButton} href='#'
             onClick={this.handleSaveClick}>
             SUBMIT

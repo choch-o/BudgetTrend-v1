@@ -3,7 +3,7 @@ import {
   SELECT_CATEGORY, INVALIDATE_CATEGORY, REQUEST_PROGRAMS, RECEIVE_PROGRAMS
 } from '../actions/fetch'
 
-function selectedCategory(state = "교육", action) {
+function selectedCategory(state = 0, action) {
   switch (action.type) {
   case SELECT_CATEGORY:
     return action.category
