@@ -8,7 +8,8 @@ import AsyncApp from '../containers/AsyncApp'
 import { connect } from 'react-redux'
 import { addProgram, toggleProgram, saveSelectedPrograms } from '../actions/budget'
 import { selectCategory, fetchProgramsIfNeeded, invalidateCategory } from '../actions/fetch'
-import Picker from '../components/Picker'
+import { Treemap } from 'react-d3'
+// import Picker from '../components/Picker'
 // import Programs from '../components/Programs'
 // import AsyncApp from '../containers/AsyncApp'
 
@@ -50,6 +51,12 @@ const styles = {
     backgroundColor: "#ffb944",
     fontSize: 18,
     textAlign: 'center', 
+  },
+  introTitle: {
+    marginBottom: 30
+  },
+  introContent: {
+    marginBottom: 30
   },
 };
 
@@ -113,22 +120,22 @@ class Budgets extends React.Component {
       this.setState(this.state.selected)
     }
     this.props.dispatch(toggleProgram(name, value))
+    console.log("CURR PROPS STATE")
+    console.log(this.props)
   }
 
   handleSaveClick() {
-    this.props.dispatch(saveSelectedPrograms(this.props.selectedPrograms))
+    this.props.dispatch(saveSelectedPrograms(this.props.selectedPrograms, this.props.selectedPromise))
   }
 
   isSelected(i) {
-    console.log("is selected")
-    console.log(this.state.selected)
     var index = this.state.selected.indexOf(i)
     if (index > -1) return true
     else return false
   }
 
   render() {
-    const { dispatch, selectedCategory, programs, isFetching, lastUpdated } = this.props
+    const { dispatch, selectedCategory, selectedPromise, programs, isFetching, lastUpdated } = this.props
     /*
     <Picker value={selectedYear}
             onChange={this.handleChange}
@@ -137,7 +144,28 @@ class Budgets extends React.Component {
     return (
       <div className="budgets">
         {programs.length === 0 &&
-          <h2>Loading...</h2>
+          <Paper
+            zDepth={1}
+            style={{ padding: 30 }}
+            >
+            <h2 style={styles.introTitle}>제목제목제목제목</h2>
+            <p style={styles.introContent}>
+              공약이행에 우리의 돈은 얼마나, 또 어떻게 쓰였을까요? <br/>
+              각각의 공약과 연관된 예산 프로그램을 직접 찾아보고, <br/>
+              다른 사람들의 생각과 비교해보세요! <br/>
+            </p>
+            <h4>지금까지 모인 예산</h4>
+            <div style={styles.budgetmap}>
+              <Treemap
+                data={this.props.promiseValue}
+                width={600}
+                height={250}
+                textColor="#484848"
+                fontSize="12px"
+                hoverAnimation={true} 
+              />
+            </div>  
+          </Paper>
         }
         {programs.length > 0 &&
           <Paper zDepth={1}
@@ -164,13 +192,13 @@ class Budgets extends React.Component {
           </Paper>
         }
         <h2> </h2>
-        {!this.state.isTaggingDone &&
+        {programs.length > 0 && !this.state.isTaggingDone &&
           <FlatButton style={styles.nextButton} href='#'
              onClick={this.handleRefreshClick}>
              NEXT
           </FlatButton>
         }
-        {this.state.isTaggingDone &&
+        {programs.length > 0 && this.state.isTaggingDone &&
           <FlatButton style={styles.submitButton} href='#'
             onClick={this.handleSaveClick}>
             SUBMIT
@@ -187,13 +215,14 @@ AsyncApp.propTypes = {
   isFetching: PropTypes.bool.isRequired,
   lastUpdated: PropTypes.number,
   dispatch: PropTypes.func.isRequired,
-  selectedPrograms: PropTypes.array
+  selectedPrograms: PropTypes.array,
+  selectedPromise: PropTypes.number.isRequired
 }
 
 function mapStateToProps(state) {
   console.log("STATE")
   console.log(state)
-  const { selectedCategory, programsByCategory, selectedPrograms } = state
+  const { selectedCategory, programsByCategory, selectedPrograms, selectedPromise } = state
   const {
     isFetching,
     lastUpdated,
@@ -205,6 +234,7 @@ function mapStateToProps(state) {
 
   return {
     selectedCategory,
+    selectedPromise,
     programs,
     isFetching,
     lastUpdated,

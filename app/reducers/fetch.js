@@ -1,17 +1,28 @@
 import { combineReducers } from 'redux'
 import {
-  SELECT_CATEGORY, INVALIDATE_CATEGORY, REQUEST_PROGRAMS, RECEIVE_PROGRAMS
+  SELECT_CATEGORY, SELECT_PROMISE, INVALIDATE_CATEGORY, REQUEST_PROGRAMS, RECEIVE_PROGRAMS
 } from '../actions/fetch'
 
 function selectedCategory(state = 0, action) {
   switch (action.type) {
-  case SELECT_CATEGORY:
-    return action.category
-  default:
-    return state
+    case SELECT_CATEGORY:
+      return action.category
+    default:
+      return state
   }
 }
 
+function selectedPromise(state = 0, action) {
+  console.log("selected category action")
+  console.log(action)
+  switch (action.type) { 
+    case SELECT_PROMISE:
+      console.log("reaches here?2")
+      return action.promise
+    default:
+      return state
+  }
+}
 function programs(state = {
   isFetching: false,
   didInvalidate: false,
@@ -52,4 +63,4 @@ function programsByCategory(state = { }, action) {
   }
 }
 
-export { selectedCategory, programsByCategory }
+export { selectedCategory, selectedPromise, programsByCategory }

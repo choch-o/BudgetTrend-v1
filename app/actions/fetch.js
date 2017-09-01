@@ -4,6 +4,7 @@ let jsonp = require('superagent-jsonp')
 export const REQUEST_PROGRAMS = 'REQUEST_PROGRAMS'
 export const RECEIVE_PROGRAMS = 'RECEIVE_PROGRAMS'
 export const SELECT_CATEGORY = 'SELECT_CATEGORY'
+export const SELECT_PROMISE = 'SELECT_PROMISE'
 export const INVALIDATE_CATEGORY = 'INVALIDATE_CATEGORY'
 function selectCategory(category) {
   return {
@@ -12,8 +13,16 @@ function selectCategory(category) {
   }
 }
 
+function selectPromise(promise) {
+  return {
+    type: SELECT_PROMISE,
+    promise
+  }
+}
+
 export function selectAndFetch(category) {
   return dispatch => {
+    dispatch(selectPromise(category))
     dispatch(selectCategory(getCategoryName(category)))
     dispatch(fetchProgramsIfNeeded(getCategoryName(category), 1))
   }

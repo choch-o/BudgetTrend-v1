@@ -6,8 +6,6 @@ exports.saveSelectedPrograms = function(req, res, next) {
   console.log(req.body);
 
   var promises = req.body.programs.map(function (program) {
-  // for (var i = 0; i < req.body.length; i++) {
-  //   var program = req.body[i]
     Budget.findOne({ label: program.label }, function(err, budget) {
       if (budget) {
         budget.count = budget.count + 1;
@@ -20,6 +18,7 @@ exports.saveSelectedPrograms = function(req, res, next) {
         budget = new Budget({
           label: program.label,
           value: program.value,
+          promise: req.body.promise,
           count: 1
         });
         budget.save(function(err) {

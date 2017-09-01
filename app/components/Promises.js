@@ -4,7 +4,6 @@ import Paper from 'material-ui/Paper';
 import {List, ListItem, makeSelectable, Subheader} from 'material-ui/List';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 import {Component, PropTypes} from 'react';
-import { selectPromise } from '../actions/promise'
 import { selectAndFetch, fetchProgramsIfNeeded } from '../actions/fetch'
 import { connect } from 'react-redux'
 injectTapEventPlugin();
@@ -41,13 +40,13 @@ function wrapState(ComposedComponent) {
     }
 
     handleRequestChange = (event, index) => {
-      const { dispatch, selectPromise } = this.props
+      const { dispatch } = this.props
       this.setState({
         selectedIndex: index,
       });
       console.log("Promise selected")
       console.log(index)
-      dispatch(selectPromise(index))
+      // dispatch(selectPromise(index))
     };
 
     render() {
@@ -280,8 +279,8 @@ class Promises extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { selectedCategory } = state
-  return { selectedCategory }
+  const { selectedCategory, selectedPromise } = state
+  return { selectedCategory, selectedPromise }
 }
 
 export default connect(mapStateToProps)(Promises);

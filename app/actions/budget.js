@@ -55,10 +55,11 @@ export function isSubmitted() {
   }
 }
 
-export function saveSelectedPrograms(programs) {
+export function saveSelectedPrograms(programs, promise) {
   return {
     type: SAVE_SELECTED_PROGRAMS,
-    programs
+    programs,
+    promise
   } 
 }
 

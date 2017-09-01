@@ -36,7 +36,7 @@ class Home extends React.Component {
 const mapStateToProps = (state) => {
   console.log("HOME STATE")
   console.log(state)
-  const { selectedPrograms, selectedCategory } = state
+  const { selectedPrograms, selectedCategory, selectedPromise } = state
   const {
     isSubmitted
   } = selectedPrograms
